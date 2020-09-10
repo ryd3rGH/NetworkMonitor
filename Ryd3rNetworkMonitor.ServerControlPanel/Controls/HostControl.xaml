@@ -1,0 +1,55 @@
+﻿<UserControl x:Class="Ryd3rNetworkMonitor.ServerControlPanel.Controls.HostControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ServerControlPanel.Controls"
+             mc:Ignorable="d" Height="150" Width="120" Margin="5,5,0,0">
+    <UserControl.Resources>
+        <Storyboard x:Key="GreenStoryBoard" RepeatBehavior="Forever">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="lineRect">
+                <EasingColorKeyFrame KeyTime="0" Value="#FF3FFF85"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#FF1C723C"/>
+                <EasingColorKeyFrame KeyTime="0:0:1" Value="#FF3FFF85"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+        <Storyboard x:Key="RedStoryBoard" RepeatBehavior="Forever">
+            <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Shape.Fill).(SolidColorBrush.Color)" Storyboard.TargetName="lineRect">
+                <EasingColorKeyFrame KeyTime="0" Value="#FFFF402B"/>
+                <EasingColorKeyFrame KeyTime="0:0:0.5" Value="#FF721D13"/>
+                <EasingColorKeyFrame KeyTime="0:0:1" Value="#FFFF402B"/>
+            </ColorAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource GreenStoryBoard}"/>
+            <BeginStoryboard Storyboard="{StaticResource RedStoryBoard}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <UserControl.ContextMenu>
+        <ContextMenu x:Name="controlMenu">
+            <MenuItem x:Name="infoBtn" Header="Host info" Click="infoBtn_Click"/>
+            <MenuItem x:Name="deleteBtn" Header="Delete host" Click="deleteBtn_Click"/>            
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Border BorderThickness="1" BorderBrush="Aquamarine" CornerRadius="4">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Image VerticalAlignment="Top" Grid.RowSpan="2" Margin="0,10,0,5" Source="/Ryd3rNetworkMonitor.ServerControlPanel;component/Resources/Images/Desktop.png"/>
+            <Grid Grid.Row="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label x:Name="ipLbl" FontSize="11" HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="2,0,2,0"/>
+                <Label x:Name="loginLbl" FontSize="11" HorizontalAlignment="Stretch" VerticalAlignment="Center" HorizontalContentAlignment="Center" Margin="2,0,2,0" Grid.Row="1"/>
+            </Grid>
+            <Rectangle x:Name="lineRect" Fill="#FF3FFF85" HorizontalAlignment="Left" Height="49.104" Margin="5.564,29.161,0,0" Grid.RowSpan="2" VerticalAlignment="Top" Width="71.983" RadiusY="1.019" RadiusX="1.019"/>
+        </Grid>
+    </Border>
+</UserControl>

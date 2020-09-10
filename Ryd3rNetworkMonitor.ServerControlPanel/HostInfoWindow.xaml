@@ -1,0 +1,53 @@
+﻿<Window x:Class="Ryd3rNetworkMonitor.ServerControlPanel.HostInfoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ServerControlPanel"
+        mc:Ignorable="d"
+        Title="HostInfoWindow" Height="600" Width="550" WindowStartupLocation="CenterOwner">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.8*"/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label x:Name="idLbl" Content="Host ID:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Row="1"/>
+        <Label x:Name="idValueLbl" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>        
+        <Label x:Name="ipLbl" Content="IP:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Row="2"/>
+        <Label x:Name="ipValueLbl" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Label x:Name="nameLbl" Content="User's full name:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Row="3"/>
+        <Label x:Name="loginLbl" Content="Login:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Row="4"/>
+        <Label x:Name="loginValueLbl" HorizontalAlignment="left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Column="1" Grid.Row="4" Grid.ColumnSpan="2"/>
+        <Label x:Name="passLbl" Content="Password:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Row="5"/>
+        <Label x:Name="passValueLbl" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"/>
+        <Label x:Name="printerLbl" Content="Printer or MFP:" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,5,0" Grid.Row="6"/>
+        <Label x:Name="upsLbl" Content="UPS availability:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="7"/>
+        <Label x:Name="scanLbl" Content="Scan availability:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="8"/>        
+        <TextBox x:Name="nameTxt" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" Grid.Column="1" Grid.Row="3" Grid.ColumnSpan="2" Margin="5,0,0,0"/>
+        <TextBox x:Name="printerTxt" VerticalAlignment="Center" HorizontalAlignment="Left" Width="200" Grid.Column="1" Grid.Row="6" Margin="5,0,0,0" Grid.ColumnSpan="2"/>
+        <RadioButton x:Name="naUpsBtn" Content="Not available" Grid.Row="7" Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0" GroupName="upsGroup" IsChecked="True"/>
+        <RadioButton x:Name="aUpsBtn" Content="Available" Grid.Row="7" Grid.Column="2" VerticalAlignment="Center" Margin="5,0,0,0" GroupName="upsGroup"/>
+        <RadioButton x:Name="naScanBtn" Content="Not available" Grid.Row="8" Grid.Column="1" VerticalAlignment="Center" Margin="5,0,0,0" GroupName="scanGroup" IsChecked="True"/>
+        <RadioButton x:Name="aScanBtn" Content="Available" Grid.Row="8" Grid.Column="2" VerticalAlignment="Center" Margin="5,0,0,0" GroupName="scanGroup"/>
+        <StackPanel x:Name="btnPanel" Orientation="Horizontal" Grid.Column="1" Grid.Row="12" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,-10,15,0">
+            <Button x:Name="cancelBtn" Content="Cancel" Height="25" Width="100" IsCancel="True"/>
+            <Button x:Name="applyBtn" Content="Apply" Height="25" Width="100" Margin="20,0,0,0" IsDefault="True" Click="applyBtn_Click"/>
+        </StackPanel>
+    </Grid>
+</Window>

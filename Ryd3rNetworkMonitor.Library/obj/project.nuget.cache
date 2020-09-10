@@ -1,0 +1,13 @@
+{
+  "version": 2,
+  "dgSpecHash": "yRK6mc3ujhG4lvLiAaRb4iHHg2oMG0smE2MTGGP4kf7lKWiIYgpT/3CveGbzoQxDR0SPy48WhFGSlCosVoRXnQ==",
+  "success": true,
+  "projectFilePath": "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
+    "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\system.data.sqlite\\1.0.113.1\\system.data.sqlite.1.0.113.1.nupkg.sha512",
+    "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\system.data.sqlite.core\\1.0.113.1\\system.data.sqlite.core.1.0.113.1.nupkg.sha512"
+  ],
+  "logs": []
+}

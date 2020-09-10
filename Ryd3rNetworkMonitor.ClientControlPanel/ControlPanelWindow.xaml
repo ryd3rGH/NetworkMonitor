@@ -1,0 +1,81 @@
+﻿<Window x:Class="Ryd3rNetworkMonitor.ClientControlPanel.ControlPanelWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ClientControlPanel"
+        mc:Ignorable="d"
+        Title="ControlPanelWindow" Height="550" Width="600" Closing="Window_Closing">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.6*"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="0.7*"/>
+        </Grid.RowDefinitions>
+        <GroupBox x:Name="controlBox" Header="Control" Margin="15,15,5,10" Grid.RowSpan="2">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                    <Button x:Name="startBtn" Content="Start messaging" Margin="10" Height="25" Click="startBtn_Click"/>
+                    <Button x:Name="stopBtn" Content="Stop messaging" Margin="10,0,10,10" Height="25" Click="stopBtn_Click"/>
+                    <Button x:Name="settingsBtn" Content="Settings" Margin="10,0,10,10" Height="25" Click="settingsBtn_Click"/>
+                </StackPanel>
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" Grid.Row="1">
+                    <Grid Margin="10,0,10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Label x:Name="mesLbl" Content="Messaging status:" HorizontalAlignment="Right" Grid.Row="0"/>
+                        <Label x:Name="mesValueLbl" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="0"/>
+                        <Label x:Name="regLbl" Content="Registration status:" Grid.Row="1" HorizontalAlignment="Right"/>
+                        <Label x:Name="regValueLbl" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="1"/>                        
+                    </Grid>
+                </StackPanel>
+            </Grid>            
+        </GroupBox>
+        <GroupBox x:Name="infoBox" Header="Information" Grid.Column="1" Grid.Row="0" Margin="10,15,15,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Label x:Name="ipLbl" Content="Server IP:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+                <Label x:Name="nameLbl" Content="Full name:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="1"/>
+                <Label x:Name="loginLbl" Content="Login:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="2"/>
+                <Label x:Name="printerLbl" Content="Printer or MFP:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="3"/>
+                <Label x:Name="upsLbl" Content="UPS availability:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="4"/>
+                <Label x:Name="scanLbl" Content="Scan availability:" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0" Grid.Row="5"/>
+                <Label x:Name="ipValueLbl" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Column="1"/>
+                <Label x:Name="nameValueLbl" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Column="1" Grid.Row="1"/>
+                <Label x:Name="loginValueLbl" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Column="1" Grid.Row="2"/>
+                <Label x:Name="printerValueLbl" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Column="1" Grid.Row="3"/>
+                <Label x:Name="upsValueLbl" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Column="1" Grid.Row="4"/>
+                <Label x:Name="scanValueLbl" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Grid.Column="1" Grid.Row="5"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="logBox" Header="Log" Grid.Column="1" Grid.Row="1" Margin="10, 0, 15, 10">
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TextBox x:Name="logTxt" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Visible" BorderBrush="Transparent" IsReadOnly="True" FontFamily="Consolas" FontSize="10.5" TextChanged="logTxt_TextChanged"/>
+            </Grid>
+        </GroupBox>
+    </Grid>
+</Window>
