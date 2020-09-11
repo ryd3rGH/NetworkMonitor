@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ServerControlPanel"
         mc:Ignorable="d"
-        Title="ControlPanelWindow" Height="670" Width="1100" MinHeight="670" MinWidth="1100" 
-        ResizeMode="CanResizeWithGrip" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+        Title="Network Monitor - Server Control Panel" Height="670" Width="1100" MinHeight="670" MinWidth="1100" 
+        ResizeMode="CanResizeWithGrip" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>

@@ -122,9 +122,6 @@ C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetwork
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\EntityFramework.SqlServer.xml
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Data.SQLite.xml
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Data.SQLite.dll.config
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.ServerControlPanel.exe
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.Library.dll
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Data.SQLite.dll
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\ControlPanelWindow.g.cs
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Controls\HostControl.g.cs
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\ControlPanelWindow.baml
@@ -132,6 +129,7 @@ C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetwork
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\SettingsWindow.g.cs
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\SettingsWindow.baml
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.ServerControlPanel.exe.config
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.ServerControlPanel.exe
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.ServerControlPanel.pdb
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Runtime.InteropServices.RuntimeInformation.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Microsoft.Win32.Primitives.dll
@@ -231,6 +229,8 @@ D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Syste
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Xml.XPath.XDocument.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\EntityFramework.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\EntityFramework.SqlServer.dll
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.Library.dll
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Data.SQLite.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Data.SQLite.EF6.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\System.Data.SQLite.Linq.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\bin\Debug\Ryd3rNetworkMonitor.Library.pdb
@@ -242,14 +242,14 @@ D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3r
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel.exe.config
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\ControlPanelWindow.g.cs
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Controls\HostControl.g.cs
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\MainWindow.g.cs
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\HostInfoWindow.g.cs
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\SettingsWindow.g.cs
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\App.g.cs
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel_MarkupCompile.cache
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel_MarkupCompile.lref
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\ControlPanelWindow.baml
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Controls\HostControl.baml
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\MainWindow.baml
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\HostInfoWindow.baml
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\SettingsWindow.baml
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel.g.resources
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel.Properties.Resources.resources
@@ -258,5 +258,3 @@ D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3r
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel.csproj.CopyComplete
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel.exe
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\Ryd3rNetworkMonitor.ServerControlPanel.pdb
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\HostInfoWindow.g.cs
-D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\obj\Debug\HostInfoWindow.baml

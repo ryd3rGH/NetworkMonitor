@@ -56,7 +56,7 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel.Controls
                 loginLbl.Content = host.Login;
                 HostState = host.IsOnline;
             }            
-        }
+        }        
 
         public void UpdateHostInfo(Host newHost)
         {
@@ -67,6 +67,25 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel.Controls
                 ipLbl.Content = newHost.Ip;
                 loginLbl.Content = newHost.Login;
                 HostState = newHost.IsOnline;
+            }
+        }
+
+        public void UpdateInterface(bool? ipDisp, bool? loginDisp)
+        {
+            if (ipDisp != null)
+            {
+                if ((bool)ipDisp)
+                    ipLbl.Visibility = Visibility.Visible;
+                else
+                    ipLbl.Visibility = Visibility.Hidden; 
+            }
+
+            if (loginDisp != null)
+            {
+                if ((bool)loginDisp)
+                    loginLbl.Visibility = Visibility.Visible;
+                else
+                    loginLbl.Visibility = Visibility.Hidden; 
             }
         }
 
