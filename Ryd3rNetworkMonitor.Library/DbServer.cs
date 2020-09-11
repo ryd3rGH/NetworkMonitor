@@ -113,28 +113,35 @@ namespace Ryd3rNetworkMonitor.Library
         {
             List<Host> hosts = new List<Host>();
 
-            using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+            try
             {
-                conn.Open();
-
-                using (SQLiteCommand getHosts = new SQLiteCommand("SELECT * FROM HOSTS", conn))
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
                 {
-                    using (SQLiteDataReader dr = getHosts.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            Host host = new Host(
-                                            dr.GetString(1), dr.GetString(2), dr.GetString(3), dr.GetString(4), 
-                                            dr.GetString(5), dr.GetString(6), Convert.ToBoolean(dr.GetValue(7)), 
-                                            Convert.ToBoolean(dr.GetValue(8)), Convert.ToDateTime(dr.GetValue(9)));
+                    conn.Open();
 
-                            hosts.Add(host); 
+                    using (SQLiteCommand getHosts = new SQLiteCommand("SELECT * FROM HOSTS", conn))
+                    {
+                        using (SQLiteDataReader dr = getHosts.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                Host host = new Host(
+                                                dr.GetString(1), dr.GetString(2), dr.GetString(3), dr.GetString(4),
+                                                dr.GetString(5), dr.GetString(6), Convert.ToBoolean(dr.GetValue(7)),
+                                                Convert.ToBoolean(dr.GetValue(8)), Convert.ToDateTime(dr.GetValue(9)));
+
+                                hosts.Add(host);
+                            }
                         }
                     }
                 }
-            }
 
-            return hosts;
+                return hosts;
+            }
+            catch (SQLiteException)
+            {
+                return null;
+            }
         }
         
         public static void DbUpdateHost(Host host)
@@ -185,19 +192,26 @@ namespace Ryd3rNetworkMonitor.Library
         private bool CreateTables()
         {
 
-            using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+            try
             {
-                conn.Open();
-
-                using (SQLiteCommand hostsTbl = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [HOSTS] (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, HOSTID TEXT NOT NULL, IP TEXT NOT NULL, " +
-                                                                  "NAME TEXT NULL, LOGIN TEXT NULL, PASS TEXT NULL, " +
-                                                                  "PRINTER TEXT NULL, UPS INTEGER NULL, SCANNER INTEGER NULL, LASTONLINE TEXT NOT NULL)", conn))
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
                 {
-                    hostsTbl.ExecuteNonQuery();
-                }
-            }
+                    conn.Open();
 
-            return true;
+                    using (SQLiteCommand hostsTbl = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [HOSTS] (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, HOSTID TEXT NOT NULL, IP TEXT NOT NULL, " +
+                                                                      "NAME TEXT NULL, LOGIN TEXT NULL, PASS TEXT NULL, " +
+                                                                      "PRINTER TEXT NULL, UPS INTEGER NULL, SCANNER INTEGER NULL, LASTONLINE TEXT NOT NULL)", conn))
+                    {
+                        hostsTbl.ExecuteNonQuery();
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }        
     }
 }

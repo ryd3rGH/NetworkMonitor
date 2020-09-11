@@ -31,7 +31,17 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
             ipTxt.Text = settings.Ip;
             regPortTxt.Text = settings.RegPort.ToString();
             mesPortTxt.Text = settings.MesPort.ToString();
+            timeTxt.Text = settings.MessageCheckTime.ToString();
+            noMesTxt.Text = settings.HostOfflineCheckTime.ToString();
 
+            if (settings.IpDisplay)
+                ipChBox.IsChecked = true;
+
+            if (settings.LoginDisplay)
+                loginChBox.IsChecked = true;
+
+            if (settings.MessageDisplay)
+                messageChBox.IsChecked = true;
         }
 
         private void applyBtn_Click(object sender, RoutedEventArgs e)
@@ -40,11 +50,24 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
             {
                 if (regPortTxt.Text != mesPortTxt.Text)
                 {
-                    settings.SaveSettings(!String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
+                    Settings newSettings = new Settings(!String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
                                           !String.IsNullOrWhiteSpace(regPortTxt.Text) ? Convert.ToInt32(regPortTxt.Text) : 17179,
-                                          !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178);
+                                          !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178,
+                                          (bool)ipChBox.IsChecked ? true : false,
+                                          (bool)loginChBox.IsChecked ? true : false,
+                                          (bool)messageChBox.IsChecked ? true : false,
+                                          !String.IsNullOrWhiteSpace(timeTxt.Text) ? Convert.ToInt32(timeTxt.Text) : 9,
+                                          !String.IsNullOrWhiteSpace(noMesTxt.Text) ? Convert.ToInt32(noMesTxt.Text) : 50);
 
-                    MessageBox.Show("Settings saved.");
+                    if (!settings.Equals(newSettings))
+                    {
+                        settings.SaveSettings(newSettings.Ip, newSettings.RegPort, newSettings.MesPort, newSettings.IpDisplay,
+                                          newSettings.LoginDisplay, newSettings.MessageDisplay, newSettings.MessageCheckTime,
+                                          newSettings.HostOfflineCheckTime);
+
+                        MessageBox.Show("Settings saved.");
+                    }
+                    
                     this.Close();
                 }
                 else
@@ -58,6 +81,16 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
         }
 
         private void mesPortTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
+        }
+
+        private void timeTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
+        }
+
+        private void noMesTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
         }

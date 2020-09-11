@@ -30,39 +30,6 @@ namespace Ryd3rNetworkMonitor.Library
                         TcpClient newClient = Listener.AcceptTcpClient();
                         HostMessageHandler client = new HostMessageHandler(newClient);
 
-                        #region old
-                        //Host newHost = new Host();
-
-                        //Thread trd = new Thread(() => { newHost = client.HandleMessage(); });
-                        //trd.Start();
-                        //trd.Join();
-
-                        ////проверка наличия хоста в списке подключенных к серверу
-                        //if (Hosts.Count > 0)
-                        //{
-                        //    bool isEqual = false;
-
-                        //    for (int i=0; i<Hosts.Count; i++)
-                        //    {
-                        //        if (newHost.Equals(Hosts[i]))
-                        //        {
-                        //            isEqual = true;
-                        //            Hosts[i].LastOnline = newHost.LastOnline;
-                        //            break;
-                        //        }
-                        //        else
-                        //            isEqual = false;
-                        //    }
-
-                        //    if (!isEqual)
-                        //        Hosts.Add(newHost);
-                        //}
-                        //else if (Hosts.Count == 0)
-                        //{
-                        //    Hosts.Add(newHost);
-                        //} 
-                        #endregion
-
                         HostMessage mes = new HostMessage();
                         Thread trd = new Thread(()=> { mes = client.HandleMessage(); });
                         trd.Start();
@@ -120,6 +87,7 @@ namespace Ryd3rNetworkMonitor.Library
                     if (Hosts[i].HostId == hostId)
                     {
                         Hosts[i].IsOnline = isOnline;
+                        Hosts[i].LastOnline = DateTime.Now;
                         break;
                     }
                 }
