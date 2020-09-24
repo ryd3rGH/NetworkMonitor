@@ -43,12 +43,16 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel.Controls
             }
         }
         public Host Host { get; set; }
+        public List<HostMessage> Messages { get; set; }
+        public List<byte[]> Screenshots { get; set; }
+        public byte[] CurrentImage { get; set; }
 
         public HostControl(Host host)
         {
             InitializeComponent();
 
             this.Host = host;
+            Messages = new List<HostMessage>();
 
             if (host != null)
             {
@@ -56,7 +60,7 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel.Controls
                 loginLbl.Content = host.Login;
                 HostState = host.IsOnline;
             }            
-        }
+        }        
 
         public void UpdateHostInfo(Host newHost)
         {
@@ -67,6 +71,25 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel.Controls
                 ipLbl.Content = newHost.Ip;
                 loginLbl.Content = newHost.Login;
                 HostState = newHost.IsOnline;
+            }
+        }
+
+        public void UpdateInterface(bool? ipDisp, bool? loginDisp)
+        {
+            if (ipDisp != null)
+            {
+                if ((bool)ipDisp)
+                    ipLbl.Visibility = Visibility.Visible;
+                else
+                    ipLbl.Visibility = Visibility.Hidden; 
+            }
+
+            if (loginDisp != null)
+            {
+                if ((bool)loginDisp)
+                    loginLbl.Visibility = Visibility.Visible;
+                else
+                    loginLbl.Visibility = Visibility.Hidden; 
             }
         }
 
@@ -85,6 +108,24 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel.Controls
             {
                 this.Tag = Host;
             }
+        }
+
+        private void UserControl_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (Host != null)
+            {
+                this.Tag = Host;
+            }
+        }
+
+        private void UserControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            this.border.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF686868"));
+        }
+
+        private void UserControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            this.border.BorderBrush = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFA4A4A4"));
         }
     }
 }

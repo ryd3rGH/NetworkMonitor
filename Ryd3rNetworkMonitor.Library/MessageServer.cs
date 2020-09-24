@@ -19,65 +19,6 @@ namespace Ryd3rNetworkMonitor.Library
             Messages = new List<HostMessage>();
         }
 
-        public void StartListening()
-        {
-            try
-            {
-                if (Listener != null)
-                {
-                    while (true)
-                    {
-                        TcpClient newClient = Listener.AcceptTcpClient();
-                        HostMessageHandler client = new HostMessageHandler(newClient);
-
-                        #region old
-                        //Host newHost = new Host();
-
-                        //Thread trd = new Thread(() => { newHost = client.HandleMessage(); });
-                        //trd.Start();
-                        //trd.Join();
-
-                        ////проверка наличия хоста в списке подключенных к серверу
-                        //if (Hosts.Count > 0)
-                        //{
-                        //    bool isEqual = false;
-
-                        //    for (int i=0; i<Hosts.Count; i++)
-                        //    {
-                        //        if (newHost.Equals(Hosts[i]))
-                        //        {
-                        //            isEqual = true;
-                        //            Hosts[i].LastOnline = newHost.LastOnline;
-                        //            break;
-                        //        }
-                        //        else
-                        //            isEqual = false;
-                        //    }
-
-                        //    if (!isEqual)
-                        //        Hosts.Add(newHost);
-                        //}
-                        //else if (Hosts.Count == 0)
-                        //{
-                        //    Hosts.Add(newHost);
-                        //} 
-                        #endregion
-
-                        HostMessage mes = new HostMessage();
-                        Thread trd = new Thread(()=> { mes = client.HandleMessage(); });
-                        trd.Start();
-                        trd.Join();
-
-                        Messages.Add(mes);
-                    }
-                }
-            }
-            catch
-            {
-
-            }
-        }
-
         public bool Start()
         {
             Listener = new TcpListener(IPAddress.Parse(Ip), Port);
@@ -89,7 +30,7 @@ namespace Ryd3rNetworkMonitor.Library
 
             if (Listener == null)
                 return false;
-            else 
+            else
                 return true;
         }
 
@@ -120,9 +61,49 @@ namespace Ryd3rNetworkMonitor.Library
                     if (Hosts[i].HostId == hostId)
                     {
                         Hosts[i].IsOnline = isOnline;
+                        Hosts[i].LastOnline = DateTime.Now;
+                        DbServer.DbUpdateLastOnline(Hosts[i]);
                         break;
                     }
                 }
+            }
+        }
+
+        public void StartListening()
+        {
+            try
+            {
+                if (Listener != null)
+                {
+                    while (true)
+                    {
+                        TcpClient newClient = Listener.AcceptTcpClient();
+                        HostMessageHandler client = new HostMessageHandler(newClient);
+
+                        HostMessage mes = new HostMessage();
+                        Thread trd = new Thread(()=> { mes = client.HandleMessage(); });
+                        trd.Start();
+                        trd.Join();
+
+                        if (mes.InnerMessage.Type == InnerMessageTypes.Registration)
+                            RegisterHost(mes.Host);
+
+                        Messages.Add(mes);
+                    }
+                }
+            }
+            catch
+            {
+
+            }
+        }
+
+        private void RegisterHost(Host host)
+        {
+            //записать в БД новый хост
+            if (host != null)
+            {
+                DbServer.DbAddHost(host);
             }
         }
     }
