@@ -3,18 +3,11 @@ using Ryd3rNetworkMonitor.ServerControlPanel.Controls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel.Design;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 
 namespace Ryd3rNetworkMonitor.ServerControlPanel
@@ -22,12 +15,11 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
     public partial class ControlPanelWindow : Window
     {
         private bool? ServerStatus { get; set; }
+        private int offlineTimeCounter;
 
         private BackgroundWorker bgw;
-        private BackgroundWorker rBgw;
         private DispatcherTimer timer;
         private MessageServer mesServer;
-        private RegistrationServer regServer;
         private DbServer dbServer;
         private List<Host> dbHosts;
         private Settings settings;
@@ -36,56 +28,389 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
         {
             InitializeComponent();
 
-            ServerStatus = null;
+            ServerStatus = false;
 
             settings = new Settings();
             settings.GetSettings();
 
             mesServer = new MessageServer(settings.Ip, settings.MesPort);
-            regServer = new RegistrationServer(settings.Ip, settings.RegPort);
             dbServer = new DbServer();
+            dbServer.Start();
 
             dbHosts = new List<Host>();
-            dbHosts = DbServer.DbGetHosts();
-            mesServer.SetDbHosts(dbHosts);
+
+            if (DbServer.DbGetHosts() != null)
+            {
+                dbHosts = DbServer.DbGetHosts();
+                mesServer.SetDbHosts(dbHosts);
+            }
+            else
+            {
+                dbServer.Start();
+            }
+            
             ShowHostControls(dbHosts);
+            FoldersCheck(dbHosts);
 
             SettingsToWindowLog(settings);
+
+            reportsBox.Visibility = Visibility.Hidden;
+            viewBtnsPanel.Visibility = Visibility.Hidden;
         }        
+
+        private void FoldersCheck(List<Host> hosts)
+        {
+            try
+            {
+                if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Logs"))
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "\\Logs");
+
+                if (hosts != null && hosts.Count > 0)
+                {
+                    for (int i = 0; i < hosts.Count; i++)
+                    {
+                        if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hosts[i].HostId}"))
+                            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hosts[i].HostId}");
+
+                        if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hosts[i].HostId}\\Log"))
+                            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hosts[i].HostId}\\Log");
+
+                        if (!Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hosts[i].HostId}\\Screenshots"))
+                            Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hosts[i].HostId}\\Screenshots");
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Folders check error"));
+            }            
+        }
+
+        private void CreateFolders(Host host)
+        {
+            try
+            {
+                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Logs"))
+                {
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{host.HostId}");
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{host.HostId}\\Log");
+                    Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{host.HostId}\\Screenshots");
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Folders creation error"));
+            }
+        }
+
+        private void DeleteFolders(Host host)
+        {
+            try
+            {
+                if (Directory.Exists(AppDomain.CurrentDomain.BaseDirectory + "\\Logs"))
+                {
+                    Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{host.HostId}\\Log");
+                    Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{host.HostId}\\Screenshots");
+                    Directory.Delete(AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{host.HostId}");
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Folders delete error"));
+            }
+        }
+
+        private void SaveLogAndPics(string hostId)
+        {
+            try
+            {
+                if (hostId != null && hostId != string.Empty)
+                {
+                    if (hostsPanel.Children.Count > 0)
+                    {
+                        for (int i = 0; i < hostsPanel.Children.Count; i++)
+                        {
+                            if (hostsPanel.Children[i].GetType() == typeof(HostControl))
+                            {
+                                if (((HostControl)hostsPanel.Children[i]).Host.HostId == hostId)
+                                {
+                                    HostControl hst = (HostControl)hostsPanel.Children[i];
+
+                                    foreach (HostMessage mes in hst.Messages)
+                                    {
+                                        string newLine = string.Empty;
+
+                                        switch (mes.InnerMessage.Type)
+                                        {
+                                            case InnerMessageTypes.Count:
+                                                break;
+                                            case InnerMessageTypes.Exit:
+                                                newLine = ConstructLogString(mes.MessageTime, $"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' offline");
+                                                break;
+                                            case InnerMessageTypes.Online:
+                                                break;
+                                            case InnerMessageTypes.Registration:
+                                                newLine = ConstructLogString(mes.MessageTime, $"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' was registered in system");
+                                                break;
+                                            case InnerMessageTypes.RegistrationCheck:
+                                                newLine = ConstructLogString(mes.MessageTime, $"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' was checked and online now");
+                                                break;
+                                            case InnerMessageTypes.Screenshot:
+                                                SaveScreenshot(mes.InnerMessage.ImageBytes, mes.Host.HostId, mes.MessageTime);
+                                                newLine = ConstructLogString(mes.MessageTime, $"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' sended screenshot");
+                                                break;
+                                            case InnerMessageTypes.SettingsChanged:
+                                                newLine = ConstructLogString(mes.MessageTime, $"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' has changed settings");
+                                                break;
+                                            case InnerMessageTypes.Timeout:
+                                                newLine = ConstructLogString(mes.MessageTime, $"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' offline because of timeout");
+                                                break;
+                                        }
+
+                                        string logFile = AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{mes.Host.HostId}\\Log\\{mes.MessageTime.Date.Day}-{mes.MessageTime.Date.Month}-{mes.MessageTime.Date.Year}.txt";
+
+                                        if (!File.Exists(logFile))
+                                        {
+                                            using (StreamWriter sw = File.CreateText(logFile))
+                                            {
+                                                if (newLine != string.Empty)
+                                                    sw.WriteLine(newLine);
+                                            }
+                                        }
+                                        else
+                                        {
+                                            using (StreamWriter sw = File.AppendText(logFile))
+                                            {
+                                                if (newLine != string.Empty)
+                                                    sw.WriteLine(newLine);
+                                            }
+                                        }
+                                    }
+
+                                    hst.Messages.Clear();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Save logs error"));
+            }
+        }
 
         private void ClientsChecking()
         {
+            offlineTimeCounter = 0;
+
             timer = new DispatcherTimer();
-            timer.Interval = new TimeSpan(0, 0, 9);
+            timer.Interval = new TimeSpan(0, 0, settings.MessageCheckTime);
             timer.Tick += Timer_Tick;
             timer.Start();
         }
 
-        private void RestartServers()
+        public void SaveScreenshot(byte[] imBytes, string hostId, DateTime dt)
         {
-            StopServers();
+            try
+            {
+                using (MemoryStream ms = new MemoryStream(imBytes))
+                {
+                    BitmapImage bim = new BitmapImage();
+                    bim.BeginInit();
+                    bim.StreamSource = ms;
+                    bim.CacheOption = BitmapCacheOption.OnLoad;
+                    bim.EndInit();
+
+                    if (bim != null)
+                    {
+                        JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+                        encoder.Frames.Add(BitmapFrame.Create(bim));
+                        encoder.QualityLevel = 80;
+
+                        var folderPath = AppDomain.CurrentDomain.BaseDirectory + $"\\Logs\\{hostId}\\Screenshots\\{dt.ToShortDateString().Replace('.', '-')}";
+                        if (!Directory.Exists(folderPath))
+                            Directory.CreateDirectory(folderPath);
+
+                        var filePath = folderPath + $"\\{dt.ToLongTimeString().Replace(':', '-')}.jpg";
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            encoder.Save(fileStream);
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Screenshot save error"));
+            }
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                if (mesServer.Messages != null && mesServer.Messages.Count > 0)
+                {
+                    for (int i = 0; i < mesServer.Messages.Count; i++)
+                    {
+                        HostMessage mes = mesServer.Messages[i];
+
+                        if (mes != null)
+                        {
+                            for (int j = 0; j < hostsPanel.Children.Count; j++)
+                            {
+                                if (hostsPanel.Children[j].GetType() == typeof(HostControl))
+                                {
+                                    HostControl hst = (HostControl)hostsPanel.Children[j];
+                                    if (hst.Host.HostId == mesServer.Messages[i].Host.HostId)
+                                    {
+                                        hst.Host.LastOnline = mesServer.Messages[i].MessageTime;
+                                        hst.Messages.Add(mesServer.Messages[i]);
+                                    }
+                                }
+                            }
+
+                            if (mes.InnerMessage != null)
+                            {
+                                Host hostToUpdate = mesServer.Hosts.Find(x => x.HostId == mes.Host.HostId);
+                                hostToUpdate.LastOnline = DateTime.Now;
+
+                                switch (mes.InnerMessage.Type)
+                                {
+                                    case InnerMessageTypes.Count:
+                                        break;
+
+                                    case InnerMessageTypes.Exit:
+                                        mesServer.SetHostState(mes.Host.HostId, false);
+                                        DbServer.DbUpdateLastOnline(hostToUpdate);
+                                        SaveLogAndPics(mes.Host.HostId);
+                                        logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' offline")}");
+                                        break;
+
+                                    case InnerMessageTypes.Online:
+                                        mesServer.SetHostState(mes.Host.HostId, true);
+                                        if (settings.MessageDisplay)
+                                            logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' online")}");
+                                        break;
+
+                                    case InnerMessageTypes.Registration:
+                                        mesServer.SetDbHosts(DbServer.DbGetHosts());
+                                        mesServer.SetHostState(mes.Host.HostId, false);
+                                        CreateFolders(mes.Host);
+                                        logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' was registered in system")}");
+                                        break;
+
+                                    case InnerMessageTypes.RegistrationCheck:
+                                        mesServer.SetHostState(mes.Host.HostId, true);
+                                        logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' was checked and online now")}");
+                                        break;
+
+                                    case InnerMessageTypes.Screenshot:
+                                        mesServer.SetHostState(mes.Host.HostId, true);
+                                        logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' sended screenshot")}");
+                                        break;
+
+                                    case InnerMessageTypes.SettingsChanged:
+                                        mesServer.SetHostState(mes.Host.HostId, true);
+                                        logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' has changed settings")}");
+                                        break;
+                                    case InnerMessageTypes.Timeout:
+                                        mesServer.SetHostState(mes.Host.HostId, false);
+                                        DbServer.DbUpdateLastOnline(hostToUpdate);
+                                        SaveLogAndPics(mes.Host.HostId);
+                                        logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Host.Ip}' with HostID '{mes.Host.HostId}' offline because of timeout")}");
+                                        break;
+                                }
+                            }
+                        }
+                    }
+
+                    ShowHostControls(mesServer.Hosts);
+
+                    mesServer.Messages.Clear();
+                }
+
+                if (offlineTimeCounter < settings.HostOfflineCheckTime)
+                    offlineTimeCounter += Properties.Settings.Default.MessagesCheckTime;
+                else
+                {
+                    for (int i = 0; i < hostsPanel.Children.Count; i++)
+                    {
+                        if (hostsPanel.Children[i].GetType() == typeof(HostControl))
+                        {
+                            HostControl hst = (HostControl)hostsPanel.Children[i];
+                            if (hst.HostState)
+                            {
+                                var tt = hst.Host.LastOnline;
+                                tt = tt.AddSeconds(Properties.Settings.Default.HostOfflineCheckTime);
+
+                                if (DateTime.Now > tt)
+                                {
+                                    hst.Messages.Add(new HostMessage(hst.Host, new InnerMessage(InnerMessageTypes.Timeout, null, null, null, null)));
+                                    SaveLogAndPics(hst.Host.HostId);
+                                    hst.HostState = false;
+                                    logTxt.AppendText($"\n{ConstructLogString($"Host '{hst.Host.Ip}' with HostID '{hst.Host.HostId}' offline because of timeout")}");
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+
+                    offlineTimeCounter = 0;
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Messaging error"));
+            }
+        }
+
+        private void RestartServer()
+        {
+            StopServer();
             startServerBtn_Click(null, null);
         }
 
-        private void StopServers()
+        private void StopServer()
         {
-            if ((mesServer != null && mesServer.ServerState) && (regServer != null && regServer.ServerState))
+            try
             {
-                if (mesServer.Stop() && regServer.Stop())
+                if (mesServer != null && mesServer.ServerState)
                 {
-                    timer.Stop();
-                    timer = null;
-
-                    if (bgw != null && rBgw != null)
+                    if (mesServer.Stop())
                     {
-                        bgw.CancelAsync();
-                        bgw.Dispose();
+                        timer.Stop();
+                        timer = null;
 
-                        rBgw.CancelAsync();
-                        rBgw.Dispose();
+                        if (bgw != null)
+                        {
+                            bgw.CancelAsync();
+                            bgw.Dispose();
+                        }
+
+                        if ((bool)ServerStatus)
+                        {
+                            ServerStatus = false;
+                            logTxt.AppendText($"{ConstructLogString("Server stopped")}\n");
+                        }
                     }
+                }
+            }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Stop server error"));
+            }
+        }
 
-                    ServerStatus = false;
+        private void UpdateHostControlInterface()
+        {
+            for (int i = 0; i < hostsPanel.Children.Count; i++)
+            {
+                if (hostsPanel.Children[i].GetType() == typeof(HostControl))
+                {
+                    HostControl host = (HostControl)hostsPanel.Children[i];
+                    host.UpdateInterface(settings.IpDisplay, settings.LoginDisplay);
                 }
             }
         }
@@ -115,6 +440,7 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                                 HostControl host = new HostControl(hosts[0]);
                                 host.deleteBtn.Click += DeleteBtn_Click;
                                 host.infoBtn.Click += InfoBtn_Click;
+                                host.MouseDoubleClick += Host_MouseDoubleClick;
                                 hostsPanel.Children.Add(host);
                             }
                         }
@@ -138,6 +464,7 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                                     HostControl host = new HostControl(hosts[i]);
                                     host.deleteBtn.Click += DeleteBtn_Click;
                                     host.infoBtn.Click += InfoBtn_Click;
+                                    host.MouseDoubleClick += Host_MouseDoubleClick;
                                     hostsPanel.Children.Add(host);
                                 }
                             }
@@ -151,30 +478,38 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                         HostControl host = new HostControl(hosts[i]);
                         host.deleteBtn.Click += DeleteBtn_Click;
                         host.infoBtn.Click += InfoBtn_Click;
+                        host.MouseDoubleClick += Host_MouseDoubleClick;
                         hostsPanel.Children.Add(host);
                     }
                 }
             }
 
-            //host state animation
-            for (int i=0; i<mesServer.Hosts.Count; i++)
+            if (mesServer.Hosts != null)
             {
-                for (int j=0; j<hostsPanel.Children.Count; j++)
+                for (int i = 0; i < mesServer.Hosts.Count; i++)
                 {
-                    if (hostsPanel.Children[j].GetType() == typeof(HostControl))
+                    for (int j = 0; j < hostsPanel.Children.Count; j++)
                     {
-                        HostControl hst = (HostControl)hostsPanel.Children[j];
-                        if (mesServer.Hosts[i].HostId == hst.Host.HostId)
+                        if (hostsPanel.Children[j].GetType() == typeof(HostControl))
                         {
-                            hst.HostState = mesServer.Hosts[i].IsOnline;
-                            break;
+                            HostControl hst = (HostControl)hostsPanel.Children[j];
+                            if (mesServer.Hosts[i].HostId == hst.Host.HostId)
+                            {
+                                hst.HostState = mesServer.Hosts[i].IsOnline;
+                                hst.Host.LastOnline = mesServer.Hosts[i].LastOnline;
+                                break;
+                            }
                         }
                     }
                 }
             }
+            else
+                dbServer.Start();
+
+            UpdateHostControlInterface();
         }
 
-        private void InfoBtn_Click(object sender, RoutedEventArgs e)
+        private void ShowHostInfoWindow()
         {
             for (int i = 0; i < hostsPanel.Children.Count; i++)
             {
@@ -184,8 +519,7 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                     if ((Host)hostCtrl.Tag != null)
                     {
                         Host host = (Host)hostCtrl.Tag;
-
-                        HostInfoWindow hostInfo = new HostInfoWindow(host);
+                        HostInfoWindow hostInfo = new HostInfoWindow(host, hostCtrl.Messages);
                         hostInfo.Owner = this;
                         hostInfo.applyBtn.Click += ApplyInfoBtn_Click;
                         hostInfo.ShowDialog();
@@ -195,6 +529,16 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                     }
                 }
             }
+        }
+
+        private void Host_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ShowHostInfoWindow();
+        }
+
+        private void InfoBtn_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHostInfoWindow();
         }
 
         private void ApplyInfoBtn_Click(object sender, RoutedEventArgs e)
@@ -224,86 +568,55 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
 
         private void DeleteBtn_Click(object sender, RoutedEventArgs e)
         {
-            Host hostToDelete = null;
-
-            for (int i=0; i<hostsPanel.Children.Count; i++)
+            try
             {
-                if (hostsPanel.Children[i].GetType() == typeof(HostControl))
+                var res = MessageBox.Show("Do really want to delete this host?\nAll data will be deleted", "Warning", MessageBoxButton.OKCancel);
+                if (res == MessageBoxResult.OK)
                 {
-                    HostControl host = (HostControl)hostsPanel.Children[i];
-                    if ((Host)host.Tag != null)
+                    Host hostToDelete = null;
+
+                    for (int i = 0; i < hostsPanel.Children.Count; i++)
                     {
-                        hostToDelete = (Host)host.Tag;
-                        hostsPanel.Children.Remove(host);
-                        break;
-                    }
-                }
-            }
-
-            dbHosts = DbServer.DbGetHosts();
-
-            ShowHostControls(dbHosts);
-
-            logTxt.Text += ConstructLogString($"Host with HostID '{hostToDelete.HostId}' was deleted");
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            if (mesServer.Messages != null && mesServer.Messages.Count > 0)
-            {
-                for (int i = 0; i < mesServer.Messages.Count; i++)
-                {
-                    HostMessage mes = mesServer.Messages[i];
-
-                    if (!mes.DelFlag)
-                    {
-                        if (!mes.IsExit)
+                        if (hostsPanel.Children[i].GetType() == typeof(HostControl))
                         {
-                            if (mes.IsRegistration)
+                            HostControl host = (HostControl)hostsPanel.Children[i];
+                            if ((Host)host.Tag != null)
                             {
-                                logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Ip}' with HostID '{mes.HostId}' was registered in system and online now")}");                                
-
-                                mesServer.SetDbHosts(DbServer.DbGetHosts());
-                                mesServer.SetHostState(mes.HostId, true);
+                                hostToDelete = (Host)host.Tag;
+                                hostsPanel.Children.Remove(host);
+                                break;
                             }
-
-                            else
-                            {
-                                mesServer.SetHostState(mes.HostId, true);
-                                logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Ip}' with HostID '{mes.HostId}' online")}");                                
-                            }                            
-
-                            mes.SetMessageForDelete();
-                        }
-                        else
-                        {
-                            mesServer.SetHostState(mes.HostId, false);
-                            logTxt.AppendText($"\n{ConstructLogString($"Host '{mes.Ip}' with HostID '{mes.HostId}' offline")}");
-
-                            Host hostToUpdate = mesServer.Hosts.Find(x => x.HostId == mes.HostId);
-                            hostToUpdate.LastOnline = DateTime.Now;
-                            DbServer.DbUpdateLastOnline(hostToUpdate);
                         }
                     }
+
+                    dbHosts = DbServer.DbGetHosts();
+
+                    ShowHostControls(dbHosts);
+                    DeleteFolders(hostToDelete);
+
+                    logTxt.Text += ConstructLogString($"Host with HostID '{hostToDelete.HostId}' was deleted");
                 }
-
-                //ShowHostControls(dbHosts);
-                ShowHostControls(mesServer.Hosts);
-
-                mesServer.Messages.Clear();
             }
-        }
+            catch (Exception)
+            {
+                logTxt.AppendText(ConstructLogString("Host delete error"));
+            }
+        }        
 
         private string ConstructLogString(string str)
         {
-            return $"\n{DateTime.Now.ToShortDateString()} {DateTime.Now.ToLongTimeString()} " + str;
+            return $"\n{DateTime.Now.ToShortDateString()} | {DateTime.Now.ToLongTimeString()} | --- " + str;
+        }
+
+        private string ConstructLogString(DateTime dt, string str)
+        {
+            return $"{dt.ToShortDateString()} | {dt.ToLongTimeString()} | --- " + str;
         }
 
         private void SettingsToWindowLog(Settings stgs)
         {
             logTxt.AppendText($"{ConstructLogString($"Server IP: {stgs.Ip}")}");
-            logTxt.AppendText($"{ConstructLogString($"Registration server port: {stgs.RegPort}")}");
-            logTxt.AppendText($"{ConstructLogString($"Message server port: {stgs.MesPort}")}\n");
+            logTxt.AppendText($"{ConstructLogString($"Message port: {stgs.MesPort}")}\n");
         }
 
         private void SettingsToWindowLog(Settings newSettings, Settings oldSettings)
@@ -312,9 +625,6 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
             {
                 if (newSettings.Ip != oldSettings.Ip)
                     logTxt.AppendText($"{ConstructLogString($"Server IP changed: {newSettings.Ip}")}");
-
-                if (newSettings.RegPort != oldSettings.RegPort)
-                    logTxt.AppendText($"{ConstructLogString($"Registration server port changed: {newSettings.RegPort}")}");
 
                 if (newSettings.MesPort != oldSettings.MesPort)
                     logTxt.AppendText($"{ConstructLogString($"Message server port changed: {newSettings.MesPort}")}");
@@ -342,11 +652,13 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                 settings = newSettings;
 
             stopServerBtn_Click(null, null);
+
+            UpdateHostControlInterface();
         }
 
         private void startServerBtn_Click(object sender, RoutedEventArgs e)
         {
-            if ((mesServer != null && !mesServer.ServerState) && (regServer != null && !regServer.ServerState))
+            if (mesServer != null && !mesServer.ServerState)
             {
                 if (dbServer.Start())
                 {
@@ -365,16 +677,6 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
 
         private void DBgw_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (regServer.Start())
-            {
-                rBgw = new BackgroundWorker();
-                rBgw.WorkerSupportsCancellation = true;
-                rBgw.DoWork += RBgw_DoWork;
-                rBgw.RunWorkerAsync();
-
-                logTxt.AppendText($"{ConstructLogString("Registration server started")}");
-            }
-
             if (mesServer.Start())
             {
                 mesServer.SetDbHosts(dbHosts);
@@ -384,7 +686,7 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
                 bgw.DoWork += Bgw_DoWork;
                 bgw.RunWorkerAsync();
 
-                logTxt.AppendText($"{ConstructLogString("Message server started")}\n");
+                logTxt.AppendText($"{ConstructLogString("Server started")}\n");
             }            
 
             if(dbHosts != null && dbHosts.Count > 0)
@@ -397,25 +699,12 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
             else
                 logTxt.AppendText($"{ConstructLogString($"No registered hosts in DB. Count: 0")}");
 
-            ServerStatus = true;
+            if (!(bool)ServerStatus)
+                ServerStatus = true;
 
             ClientsChecking();
 
             ShowHostControls(dbHosts);
-        }
-
-        private void RBgw_DoWork(object sender, DoWorkEventArgs e)
-        {
-            if (regServer != null)
-            {
-                regServer.StartListening();
-            }
-
-            else
-            {
-                rBgw.CancelAsync();
-                rBgw.Dispose();
-            }
         }
 
         private void Bgw_DoWork(object sender, DoWorkEventArgs e)
@@ -434,10 +723,24 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
 
         private void stopServerBtn_Click(object sender, RoutedEventArgs e)
         {
-            StopServers();
+            StopServer();
 
-            logTxt.AppendText($"{ConstructLogString("Registration server stopped")}");
-            logTxt.AppendText($"{ConstructLogString("Message server stopped")}\n");
+            if (ServerStatus != null)  
+            {
+                if (!(bool)ServerStatus)
+                {
+                    for (int i=0; i<hostsPanel.Children.Count; i++)
+                    {
+                        if (hostsPanel.Children[i].GetType() == typeof(HostControl))
+                        {
+                            HostControl hst = (HostControl)hostsPanel.Children[i];
+                            hst.HostState = false;
+                        }
+                    }
+                    
+                    ServerStatus = false;                    
+                }                
+            }            
         }
 
         private void logTxt_TextChanged(object sender, TextChangedEventArgs e)
@@ -450,11 +753,16 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
             if (ServerStatus != null && (bool)ServerStatus)
             {
                 logTxt.AppendText($"{ConstructLogString("Servers restarting process started")}\n");
-                RestartServers();
+                RestartServer();
             }
 
             else            
                 startServerBtn_Click(null, null);            
+        }
+
+        private void Window_Closing(object sender, CancelEventArgs e)
+        {
+            StopServer();
         }
     }
 }
