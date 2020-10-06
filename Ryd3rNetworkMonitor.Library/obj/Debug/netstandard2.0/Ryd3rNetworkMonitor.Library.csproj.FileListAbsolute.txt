@@ -1,12 +1,12 @@
+C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.deps.json
+C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.dll
+C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.pdb
+C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.csprojAssemblyReference.cache
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.AssemblyInfoInputs.cache
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.AssemblyInfo.cs
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.csproj.CoreCompileInputs.cache
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.dll
 C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.pdb
-C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.deps.json
-C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.dll
-C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.pdb
-C:\Users\Hidewalk001\Desktop\CSharpCodeProjects\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\obj\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.csprojAssemblyReference.cache
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.deps.json
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.dll
 D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.Library\bin\Debug\netstandard2.0\Ryd3rNetworkMonitor.Library.pdb

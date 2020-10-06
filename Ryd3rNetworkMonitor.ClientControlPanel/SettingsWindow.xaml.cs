@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ryd3rNetworkMonitor.Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -32,7 +33,6 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
             if (settings != null)
             {
                 ipTxt.Text = settings.Ip;
-                regPortTxt.Text = settings.RegPort.ToString();
                 mesPortTxt.Text = settings.MesPort.ToString();
                 intervalTxt.Text = settings.SendInterval.ToString();
 
@@ -73,7 +73,6 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
                     //если данные хоста загружены из файла, то проверить данные и при необходимости обновить их в файле и в БД на сервере
                     settings.SaveSettings(
                             !String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
-                            !String.IsNullOrWhiteSpace(regPortTxt.Text) ? Convert.ToInt32(regPortTxt.Text) : 17179,
                             !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178,
                             !String.IsNullOrWhiteSpace(intervalTxt.Text) ? Convert.ToInt32(intervalTxt.Text) : 30,
                             (bool)messageChBox.IsChecked ? true : false,
@@ -93,7 +92,7 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
                 {
                     //если данных хоста нет (скорее всего нет файла host.xml), то нужно отправить данные на регистрацию серверу.
                     //собрать объект Host
-                    
+
                     settings.Host = new Library.Host(string.Empty, Settings.GetLocalIPAddress(),
                                                     !String.IsNullOrWhiteSpace(nameTxt.Text) ? nameTxt.Text : string.Empty,
                                                     !String.IsNullOrWhiteSpace(loginTxt.Text) ? loginTxt.Text : string.Empty,
@@ -103,15 +102,13 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
                                                     (bool)aScanBtn.IsChecked ? true : false,
                                                     DateTime.Now);
 
-                    
-                    //сохранить файл host.xml
                     settings.Host.SaveHostFile(AppDomain.CurrentDomain.BaseDirectory);
 
-                    //отправить на регистрацию
                     IFormatter formatter = new BinaryFormatter();
-                    TcpClient regClient = new TcpClient(settings.Ip, settings.RegPort);
-                    NetworkStream stream = regClient.GetStream(); 
-                    formatter.Serialize(stream, settings.Host); 
+                    InnerMessage inMes = new InnerMessage(InnerMessageTypes.Registration, string.Empty, null, null, null);
+                    TcpClient regClient = new TcpClient(settings.Ip, settings.MesPort);
+                    NetworkStream stream = regClient.GetStream();
+                    formatter.Serialize(stream, new HostMessage(settings.Host, inMes));
 
                     if (stream.CanRead)
                     {
@@ -130,11 +127,14 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
                         settings.Host.HostId = newHostId.ToString();
                         if (settings.Host.HostId != string.Empty && !String.IsNullOrWhiteSpace(settings.Host.HostId))
                         {
+                            settings.Host.InsertHostIdToFile();
                             MessageBox.Show("Host successfully registered", "Success");
-                        }                            
+                        }
                         else
                             MessageBox.Show("Registration failed", "Warning");
                     }
+                    else
+                        MessageBox.Show("No response from server");
                 }
             }
             else

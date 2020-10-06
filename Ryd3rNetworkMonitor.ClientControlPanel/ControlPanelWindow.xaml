@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ClientControlPanel"
         mc:Ignorable="d"
-        Title="ControlPanelWindow" Height="550" Width="600" Closing="Window_Closing">
+        Title="Network Monitor - Client Control Panel" Height="550" Width="600" Closing="Window_Closing">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.6*"/>

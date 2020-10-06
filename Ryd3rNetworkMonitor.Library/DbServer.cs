@@ -70,10 +70,14 @@ namespace Ryd3rNetworkMonitor.Library
         {
             using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
             {
+                var ups = host.UPS ? 1 : 0;
+                var scan = host.Scanner ? 1 : 0;
+
                 conn.Open();
 
                 using (SQLiteCommand checkHost = new SQLiteCommand($"SELECT COUNT(*) FROM HOSTS " +
-                                                                   $"WHERE HOSTID = '{host.HostId}' AND IP = '{host.Ip}'", conn))
+                                                                   $"WHERE HOSTID = '{host.HostId}' AND IP = '{host.Ip}' AND NAME = '{host.Name}' AND LOGIN = '{host.Login}' " +
+                                                                   $"AND PASS = '{host.Password}' AND PRINTER = '{host.PrinterMFP}' AND UPS = {ups} AND SCANNER = {scan}", conn))
                 {
                     var res = Convert.ToInt32(checkHost.ExecuteScalar());
                     if (res == 0)                    
@@ -113,28 +117,35 @@ namespace Ryd3rNetworkMonitor.Library
         {
             List<Host> hosts = new List<Host>();
 
-            using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+            try
             {
-                conn.Open();
-
-                using (SQLiteCommand getHosts = new SQLiteCommand("SELECT * FROM HOSTS", conn))
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
                 {
-                    using (SQLiteDataReader dr = getHosts.ExecuteReader())
-                    {
-                        while (dr.Read())
-                        {
-                            Host host = new Host(
-                                            dr.GetString(1), dr.GetString(2), dr.GetString(3), dr.GetString(4), 
-                                            dr.GetString(5), dr.GetString(6), Convert.ToBoolean(dr.GetValue(7)), 
-                                            Convert.ToBoolean(dr.GetValue(8)), Convert.ToDateTime(dr.GetValue(9)));
+                    conn.Open();
 
-                            hosts.Add(host); 
+                    using (SQLiteCommand getHosts = new SQLiteCommand("SELECT * FROM HOSTS", conn))
+                    {
+                        using (SQLiteDataReader dr = getHosts.ExecuteReader())
+                        {
+                            while (dr.Read())
+                            {
+                                Host host = new Host(
+                                                dr.GetString(1), dr.GetString(2), dr.GetString(3), dr.GetString(4),
+                                                dr.GetString(5), dr.GetString(6), Convert.ToBoolean(dr.GetValue(7)),
+                                                Convert.ToBoolean(dr.GetValue(8)), Convert.ToDateTime(dr.GetValue(9)));
+
+                                hosts.Add(host);
+                            }
                         }
                     }
                 }
-            }
 
-            return hosts;
+                return hosts;
+            }
+            catch (SQLiteException)
+            {
+                return null;
+            }
         }
         
         public static void DbUpdateHost(Host host)
@@ -162,11 +173,124 @@ namespace Ryd3rNetworkMonitor.Library
                 conn.Open();
 
                 using (SQLiteCommand updateOnline = new SQLiteCommand($"UPDATE HOSTS " +
-                                                                      $"SET LASTONLINE = '{host.LastOnline.ToString("s")}'", conn))
+                                                                      $"SET LASTONLINE = '{host.LastOnline.ToString("s")}'" +
+                                                                      $"WHERE HOSTID = '{host.HostId}'", conn))
                 {
                     updateOnline.ExecuteNonQuery();
                 }
             }
+        }
+
+        public static bool DBAddWholeTime(string hostId, DateTime dt, int workSeconds)
+        {
+            try
+            {
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+                {
+                    conn.Open();
+                    int count = 0;
+
+                    using (SQLiteCommand checkDay = new SQLiteCommand($"SELECT COUNT (*) FROM [DAYS_TIME] WHERE HOSTID = '{hostId}' AND DATE = '{dt.Date.ToString("s")}'", conn))
+                    {
+                        count = Convert.ToInt32(checkDay.ExecuteScalar());
+
+                        if (count > 0)
+                        {
+                            using (SQLiteCommand addSeconds = new SQLiteCommand($"UPDATE [DAYS_TIME] " +
+                                                                                $"SET WHOLE_TIME = WHOLE_TIME + {workSeconds} " +
+                                                                                $"WHERE HOSTID = '{hostId}' AND DATE = '{dt.Date.ToString("s")}'", conn))
+                            {
+                                addSeconds.ExecuteNonQuery();
+                            }
+                        }
+                        else
+                        {
+                            using (SQLiteCommand insertSeconds = new SQLiteCommand($"INSERT INTO [DAYS_TIME] (HOSTID, DATE, WHOLE_TIME) " +
+                                                                                   $"VALUES ('{hostId}', '{dt.Date.ToString("s")}', {workSeconds})", conn))
+                            {
+                                insertSeconds.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static bool DbAddInteraval(string hostId, DateTime startTime, DateTime endTime)
+        {
+            try
+            {
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+                {
+                    conn.Open();
+
+                    using (SQLiteCommand addInterval = new SQLiteCommand($"INSERT INTO [TIME_INTERVALS] (HOSTID, START_DT, END_DT) " +
+                                                                         $"VALUES ('{hostId}', '{startTime.ToString("s")}', '{endTime.ToString("s")}')", conn))
+                    {
+                        addInterval.ExecuteNonQuery();
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public static int? DBGetDayTime(string hostId, DateTime dt)
+        {
+            int? wholeSeconds = null;
+
+            try
+            {
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+                {
+                    conn.Open();
+
+                    using (SQLiteCommand getSeconds = new SQLiteCommand($"SELECT WHOLE_TIME FROM [DAYS_TIME] WHERE HOSTID = '{hostId}' AND DATE = '{dt.Date.ToString("s")}'", conn))
+                        wholeSeconds = Convert.ToInt32(getSeconds.ExecuteScalar());
+                }
+            }
+            catch
+            {
+                wholeSeconds = null;
+            }
+
+            return wholeSeconds;
+        }
+
+        public static List<IntervalTemplate> DBGetIntervals(string hostId)
+        {
+            List<IntervalTemplate> intervals = new List<IntervalTemplate>();
+
+            using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
+            {
+                conn.Open();
+
+                using (SQLiteCommand getIntervals = new SQLiteCommand($"SELECT * FROM [TIME_INTERVALS] WHERE HOSTID = '{hostId}'", conn))
+                {
+                    using (SQLiteDataReader dr = getIntervals.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            intervals.Add(new IntervalTemplate() { HostId = hostId, 
+                                StartTime = dr.GetValue(1) != null ? Convert.ToDateTime(dr.GetString(2)) : DateTime.MinValue, 
+                                EndTime = dr.GetValue(2) != null ? Convert.ToDateTime(dr.GetString(3)) : DateTime.MinValue
+                            });
+                        }
+                    }
+                }
+            }               
+
+            return intervals;
         }
 
         private bool CreateDb()
@@ -185,19 +309,41 @@ namespace Ryd3rNetworkMonitor.Library
         private bool CreateTables()
         {
 
-            using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
-            {
-                conn.Open();
-
-                using (SQLiteCommand hostsTbl = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [HOSTS] (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, HOSTID TEXT NOT NULL, IP TEXT NOT NULL, " +
-                                                                  "NAME TEXT NULL, LOGIN TEXT NULL, PASS TEXT NULL, " +
-                                                                  "PRINTER TEXT NULL, UPS INTEGER NULL, SCANNER INTEGER NULL, LASTONLINE TEXT NOT NULL)", conn))
+            try
+            {               
+                using (SQLiteConnection conn = new SQLiteConnection($"DataSource={AppDomain.CurrentDomain.BaseDirectory}\\Monitor.db; Version=3;"))
                 {
-                    hostsTbl.ExecuteNonQuery();
-                }
-            }
+                    conn.Open();
 
-            return true;
+                    /* общая таблица хостов */
+                    using (SQLiteCommand hostsTbl = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [HOSTS] (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, HOSTID TEXT NOT NULL, IP TEXT NOT NULL, " +
+                                                                      "NAME TEXT NULL, LOGIN TEXT NULL, PASS TEXT NULL, " +
+                                                                      "PRINTER TEXT NULL, UPS INTEGER NULL, SCANNER INTEGER NULL, LASTONLINE TEXT NOT NULL)", conn))
+                    {
+                        hostsTbl.ExecuteNonQuery();
+                    }
+
+                    /* таблица с общим временем работы за определенные сутки, DATE - только дата */
+                    using (SQLiteCommand dayTbl = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [DAYS_TIME] (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, HOSTID TEXT NOT NULL, " +
+                                                                    "DATE TEXT NOT NULL, WHOLE_TIME INTEGER NOT NULL)", conn))
+                    {
+                        dayTbl.ExecuteNonQuery();
+                    }
+
+                    /* таблица с периодами работы */
+                    using (SQLiteCommand periodsTbl = new SQLiteCommand("CREATE TABLE IF NOT EXISTS [TIME_INTERVALS] (ID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, HOSTID TEXT NOT NULL, " +
+                                                                        "START_DT TEXT NOT NULL, END_DT TEXT NOT NULL)", conn))
+                    {
+                        periodsTbl.ExecuteNonQuery();
+                    }
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }        
     }
 }
