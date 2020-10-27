@@ -1,22 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "3qLdMBMGrQzzBWhGqZe3J9fzFyGWk2ujRu0AcYOU6QtA6paKYyCV4QucmMw9I487+NpVrLkJ2EloI3gcRMdoYw==",
+  "dgSpecHash": "yRK6mc3ujhG4lvLiAaRb4iHHg2oMG0smE2MTGGP4kf7lKWiIYgpT/3CveGbzoQxDR0SPy48WhFGSlCosVoRXnQ==",
   "success": true,
-  "projectFilePath": "E:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
+  "projectFilePath": "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
   "expectedPackageFiles": [
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
+    "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\microsoft.netcore.platforms\\1.1.0\\microsoft.netcore.platforms.1.1.0.nupkg.sha512",
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder\\netstandard.library\\2.0.3\\netstandard.library.2.0.3.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.buffers\\4.4.0\\system.buffers.4.4.0.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.configuration.configurationmanager\\4.7.0\\system.configuration.configurationmanager.4.7.0.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.data.sqlite\\1.0.113.1\\system.data.sqlite.1.0.113.1.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.data.sqlite.core\\1.0.113.1\\system.data.sqlite.core.1.0.113.1.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.memory\\4.5.3\\system.memory.4.5.3.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.numerics.vectors\\4.4.0\\system.numerics.vectors.4.4.0.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.5.2\\system.runtime.compilerservices.unsafe.4.5.2.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.security.accesscontrol\\4.7.0\\system.security.accesscontrol.4.7.0.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.security.cryptography.protecteddata\\4.7.0\\system.security.cryptography.protecteddata.4.7.0.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.security.permissions\\4.7.0\\system.security.permissions.4.7.0.nupkg.sha512",
-    "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\system.security.principal.windows\\4.7.0\\system.security.principal.windows.4.7.0.nupkg.sha512"
+    "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\system.data.sqlite\\1.0.113.1\\system.data.sqlite.1.0.113.1.nupkg.sha512",
+    "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\system.data.sqlite.core\\1.0.113.1\\system.data.sqlite.core.1.0.113.1.nupkg.sha512"
   ],
   "logs": []
 }

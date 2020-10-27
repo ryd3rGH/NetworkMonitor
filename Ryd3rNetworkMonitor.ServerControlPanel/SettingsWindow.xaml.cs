@@ -25,71 +25,26 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
         {
             InitializeComponent();
 
-            wHoursBox.ItemsSource = new[] { 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16 };
-
             settings = new Settings();
             settings.GetSettings();
 
             ipTxt.Text = settings.Ip;
+            regPortTxt.Text = settings.RegPort.ToString();
             mesPortTxt.Text = settings.MesPort.ToString();
-            timeTxt.Text = settings.MessageCheckTime.ToString();
-            noMesTxt.Text = settings.HostOfflineCheckTime.ToString();
 
-            if (settings.IpDisplay)
-                ipChBox.IsChecked = true;
-
-            if (settings.LoginDisplay)
-                loginChBox.IsChecked = true;
-
-            if (settings.MessageDisplay)
-                messageChBox.IsChecked = true;
-
-            for (int i=0; i<wHoursBox.Items.Count; i++)
-            {
-                if ((int)wHoursBox.Items[i] == settings.WorkingHours)
-                {
-                    wHoursBox.SelectedItem = wHoursBox.Items[i];
-                    break;
-                }
-            }
-
-            logMaxLinesTxt.Text = settings.LogMaxLines.ToString();
-
-            if (settings.SaveOnClose)
-                closeSaveChBox.IsChecked = true;
-
-            if (settings.SaveOnClear)
-                clearSaveChBox.IsChecked = true;
         }
 
         private void applyBtn_Click(object sender, RoutedEventArgs e)
         {
             if (settings != null)
             {
-                if (mesPortTxt.Text != string.Empty)
+                if (regPortTxt.Text != mesPortTxt.Text)
                 {
-                    Settings newSettings = new Settings(!String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
-                                          !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178,
-                                          (bool)ipChBox.IsChecked ? true : false,
-                                          (bool)loginChBox.IsChecked ? true : false,
-                                          (bool)messageChBox.IsChecked ? true : false,
-                                          !String.IsNullOrWhiteSpace(timeTxt.Text) ? Convert.ToInt32(timeTxt.Text) : 9,
-                                          !String.IsNullOrWhiteSpace(noMesTxt.Text) ? Convert.ToInt32(noMesTxt.Text) : 50,
-                                          wHoursBox.SelectedItem != null ? (int)wHoursBox.SelectedItem : 8,
-                                          !String.IsNullOrWhiteSpace(logMaxLinesTxt.Text) ? Convert.ToInt32(logMaxLinesTxt.Text) : 50,
-                                          (bool)closeSaveChBox.IsChecked ? true : false, 
-                                          (bool)clearSaveChBox.IsChecked ? true : false);
+                    settings.SaveSettings(!String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
+                                          !String.IsNullOrWhiteSpace(regPortTxt.Text) ? Convert.ToInt32(regPortTxt.Text) : 17179,
+                                          !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178);
 
-                    if (!settings.Equals(newSettings))
-                    {
-                        settings.SaveSettings(newSettings.Ip, newSettings.MesPort, newSettings.IpDisplay,
-                                          newSettings.LoginDisplay, newSettings.MessageDisplay, newSettings.MessageCheckTime,
-                                          newSettings.HostOfflineCheckTime, newSettings.WorkingHours, newSettings.LogMaxLines,
-                                          newSettings.SaveOnClose, newSettings.SaveOnClear);
-
-                        MessageBox.Show("Settings saved.");
-                    }
-                    
+                    MessageBox.Show("Settings saved.");
                     this.Close();
                 }
                 else
@@ -103,21 +58,6 @@ namespace Ryd3rNetworkMonitor.ServerControlPanel
         }
 
         private void mesPortTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
-        }
-
-        private void timeTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
-        }
-
-        private void noMesTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
-        }
-
-        private void logMaxLinesTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
             if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
         }

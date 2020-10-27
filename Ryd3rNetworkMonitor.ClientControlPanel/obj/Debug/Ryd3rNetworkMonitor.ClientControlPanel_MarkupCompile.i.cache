@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-E:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ClientControlPanel\obj\Debug\
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ClientControlPanel\obj\Debug\
 Ryd3rNetworkMonitor.ClientControlPanel
 none
 false
 DEBUG;TRACE
-E:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ClientControlPanel\App.xaml
+D:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ClientControlPanel\App.xaml
 2-1236215931
 
-10-1095505617
-1221925073590
+8-1504843645
+120-218066901
 ControlPanelWindow.xaml;SettingsWindow.xaml;
 
-False
+True
 

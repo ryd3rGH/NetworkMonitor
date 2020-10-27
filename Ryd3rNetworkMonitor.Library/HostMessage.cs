@@ -8,22 +8,33 @@ namespace Ryd3rNetworkMonitor.Library
     [Serializable]
     public class HostMessage
     {
-        //сделать конструктор, в кот. передается объект Host и InnerMessage
-        //по InnerMessage ориентироваться что делать с хостом - регистрировать, проверять регистрацию или сохранять сообщения        
-        public Host Host { get; private set; }
-        public InnerMessage InnerMessage { get; private set; }
+        public string HostId { get; private set; }
+        public string Ip { get; private set; }
+        public string HostName { get; private set; }
+        public bool IsExit { get; private set; }
+        public bool IsRegistration { get; private set; }
         public DateTime MessageTime { get; private set; }
+        public bool DelFlag { get; private set; }
 
         public HostMessage()
         {
 
         }
 
-        public HostMessage(Host host, InnerMessage message)
+        public HostMessage(string hostId, string ip, string name, bool isExit, bool isRegistration)
         {
-            Host = host;
+            HostId = hostId;
+            Ip = ip;
+            HostName = name;
+            IsExit = isExit;
+            IsRegistration = isRegistration;
             MessageTime = DateTime.Now;
-            InnerMessage = message;
+            DelFlag = false;
+        }
+
+        public void SetMessageForDelete()
+        {
+            DelFlag = true;
         }
     }
 }
