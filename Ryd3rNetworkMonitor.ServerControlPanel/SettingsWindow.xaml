@@ -5,30 +5,76 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ServerControlPanel"
         mc:Ignorable="d"
-        Title="SettingsWindow" Height="450" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
+        Title="Settings" Height="700" Width="500" ResizeMode="NoResize" WindowStartupLocation="CenterOwner">
     <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="0.5*"/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="1.2*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="0.9*"/>
+            <RowDefinition Height="0.32*"/>
         </Grid.RowDefinitions>
-        <Label x:Name="serverIpLbl" Content="Server IP:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Margin="0,0,5,0"/>
-        <Label x:Name="regPortLbl" Content="Registration server port:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="2" Margin="0,0,5,0"/>
-        <Label x:Name="mesPortLbl" Content="Message Server port:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="3" Margin="0,0,5,0"/>
-        <TextBox x:Name="ipTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="150"/>
-        <TextBox x:Name="regPortTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="50" MaxLength="5" PreviewTextInput="regPortTxt_PreviewTextInput"/>
-        <TextBox x:Name="mesPortTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="3" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="50" MaxLength="5" PreviewTextInput="mesPortTxt_PreviewTextInput"/>
-        <StackPanel Orientation="Horizontal" Grid.Row="8" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,0,20,0">
+        <GroupBox x:Name="connectionBox" Header="Connection" Margin="10,10,10,5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="serverIpLbl" Content="Server IP:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="0" Margin="0,0,5,0"/>
+                <Label x:Name="mesPortLbl" Content="Message Server port:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="1" Margin="0,0,5,0"/>
+                <Label x:Name="timeLbl" Content="Messages check time:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="2" Margin="0,0,5,0"/>
+                <Label x:Name="noMessagesLbl" Content="No messages check time:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="4" Margin="0,0,5,0"/>
+                <TextBox x:Name="ipTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="0" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="150"/>
+                <TextBox x:Name="mesPortTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="50" MaxLength="5" PreviewTextInput="mesPortTxt_PreviewTextInput"/>
+                <TextBox x:Name="timeTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="50" MaxLength="2" PreviewTextInput="timeTxt_PreviewTextInput"/>
+                <Label x:Name="secLbl" Content="sec" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Left" Margin="55,0,0,0"/>
+                <TextBox x:Name="noMesTxt" HorizontalAlignment="Left" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1" Margin="5,0,0,0" FontSize="12" Width="50" MaxLength="2" PreviewTextInput="noMesTxt_PreviewTextInput"/>
+                <Label x:Name="secNoMesLbl" Content="sec" Grid.Row="4" Grid.Column="1" VerticalAlignment="Center" HorizontalContentAlignment="Left" Margin="55,0,0,0"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="viewBox" Header="Interface" Grid.Row="1" Margin="10,5,10,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.175*"/>
+                    <ColumnDefinition Width="0.31*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <CheckBox x:Name="ipChBox" Content="Display the IP-adress in host control" Grid.Column="1" Grid.Row="0" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="loginChBox" Content="Display login name in host control" Grid.Column="1" Grid.Row="1" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                <CheckBox x:Name="messageChBox" Content="Periodically display message when host is online" Grid.Column="1" Grid.Row="2" VerticalAlignment="Center" Grid.ColumnSpan="2"/>
+                <Label x:Name="wHoursLbl" Content="Working hours:" Grid.Row="3" Grid.ColumnSpan="2" VerticalContentAlignment="Center" HorizontalAlignment="Right" Margin="0,0,10,0"/>
+                <ComboBox x:Name="wHoursBox" Grid.Row="3" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,0,0" Width="50"/>
+            </Grid>
+        </GroupBox>
+        <GroupBox x:Name="logBox" Header="Log" Grid.Row="2" Margin="10,5,10,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.5*"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Label x:Name="maxLinesLbl" Content="Log max lines:" HorizontalAlignment="Right" VerticalAlignment="Center" Grid.Row="0" Margin="0,0,5,0"/>                
+                <TextBox x:Name="logMaxLinesTxt" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Margin="5,0,0,0" PreviewTextInput="logMaxLinesTxt_PreviewTextInput"/>
+                <CheckBox x:Name="closeSaveChBox" Content="Save log to file on application close" Grid.ColumnSpan="2" Grid.Row="1" Margin="55,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                <CheckBox x:Name="clearSaveChBox" Content="Save log to file on clear log panel" Grid.ColumnSpan="2" Grid.Row="2" Margin="55,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            </Grid>
+        </GroupBox>
+        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Right" Margin="0,0,20,0">
             <Button x:Name="cancelBtn" Content="Cancel" Height="25" Width="100" IsCancel="True"/>
             <Button x:Name="applyBtn" Content="Apply" Height="25" Width="100" Margin="20,0,0,0" IsDefault="True" Click="applyBtn_Click"/>
         </StackPanel>

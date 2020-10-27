@@ -1,8 +1,12 @@
 ﻿
 
-FD:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\ControlPanelWindow.xaml;;
-FD:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\Controls\HostControl.xaml;;
-FD:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\HostInfoWindow.xaml;;
-FD:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\MainWindow.xaml;;
-FD:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\SettingsWindow.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\ControlPanelWindow.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\Controls\HostControl.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\Controls\HostLineControl.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\Controls\IntervalLineControl.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\Controls\ScreenshotControl.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\HostInfoWindow.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\IntervalsReportWindow.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\ScreensWindow.xaml;;
+FE:\db\Ryd3rNetworkMonitor\Ryd3rNetworkMonitor.ServerControlPanel\SettingsWindow.xaml;;
 

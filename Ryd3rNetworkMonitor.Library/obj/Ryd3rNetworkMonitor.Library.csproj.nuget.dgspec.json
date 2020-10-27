@@ -1,31 +1,33 @@
 {
   "format": 1,
   "restore": {
-    "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj": {}
+    "E:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj": {}
   },
   "projects": {
-    "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj": {
+    "E:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
+        "projectUniqueName": "E:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
         "projectName": "Ryd3rNetworkMonitor.Library",
-        "projectPath": "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
-        "packagesPath": "C:\\Users\\Fridayff.EDUCATION\\.nuget\\packages\\",
-        "outputPath": "D:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\obj\\",
+        "projectPath": "E:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\Ryd3rNetworkMonitor.Library.csproj",
+        "packagesPath": "C:\\Users\\user01.EDUCATION\\.nuget\\packages\\",
+        "outputPath": "E:\\db\\Ryd3rNetworkMonitor\\Ryd3rNetworkMonitor.Library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
         ],
         "configFilePaths": [
-          "C:\\Users\\Fridayff.EDUCATION\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\user01.EDUCATION\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
         ],
         "originalTargetFrameworks": [
           "netstandard2.0"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "https://www.nuget.org/api/v2/": {}
+          "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "netstandard2.0": {
@@ -47,6 +49,10 @@
               "version": "[2.0.3, )",
               "autoReferenced": true
             },
+            "System.Configuration.ConfigurationManager": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
             "System.Data.SQLite": {
               "target": "Package",
               "version": "[1.0.113.1, )"
@@ -62,7 +68,7 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.402\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.403\\RuntimeIdentifierGraph.json"
         }
       }
     }
