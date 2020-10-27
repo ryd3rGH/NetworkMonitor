@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Ryd3rNetworkMonitor.ServerControlPanel"
         mc:Ignorable="d"
-        Title="ControlPanelWindow" Height="670" Width="1100" MinHeight="670" MinWidth="1100" 
-        ResizeMode="CanResizeWithGrip" WindowState="Maximized" WindowStartupLocation="CenterScreen">
+        Title="Network Monitor - Server Control Panel" Height="670" Width="1100" MinHeight="670" MinWidth="1100" 
+        ResizeMode="CanResizeWithGrip" WindowState="Maximized" WindowStartupLocation="CenterScreen" Closing="Window_Closing">
     <Grid>
         <Grid VerticalAlignment="Stretch" HorizontalAlignment="Stretch">
             <Grid.ColumnDefinitions>
@@ -26,23 +26,51 @@
                     <Button x:Name="startServerBtn" Content="Start server" Margin="10" Height="25" Click="startServerBtn_Click"/>
                     <Button x:Name="stopServerBtn" Content="Stop server" Margin="10,0,10,10" Height="25" Click="stopServerBtn_Click"/>
                     <Button x:Name="restartServerBtn" Content="Restart server" Margin="10,0,10,10" Height="25" Click="restartServerBtn_Click"/>
-                    <Button x:Name="settingsBtn" Content="Settings" Margin="10,0,10,10" Height="25" Click="settingsBtn_Click"/>
+                    <Button x:Name="settingsBtn" Content="Settings" Margin="10,0,10,10" Height="25" Click="settingsBtn_Click"/>                    
                 </StackPanel>
             </GroupBox>
             <GroupBox x:Name="reportsBox" Header="Reports" Grid.Row="3" Grid.RowSpan="3" Margin="15,5,5,15">
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    
-                </Grid>
+                <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Top" Orientation="Vertical">
+                    <Button x:Name="intervalsBtn" Content="Time report" Margin="10" Height="25" Click="intervalsBtn_Click"/>
+                </StackPanel>
             </GroupBox>
             <GroupBox x:Name="hostsBox" Header="Hosts" HorizontalAlignment="Stretch" 
                       VerticalAlignment="Stretch" Grid.Column="1" Grid.Row="0" Grid.RowSpan="4" Margin="10,15,15,5">
-                <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <WrapPanel x:Name="hostsPanel" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal"/>
-                </ScrollViewer>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition Height="35"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Grid x:Name="viewBtnsPanel" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Rectangle VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Fill="#FFE2E2E2" RadiusX="4" RadiusY="4" Margin="-2,-2,-2,-2"/>
+                        <StackPanel x:Name="btnPanel" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <ToggleButton x:Name="tableBtn" Content="Table" Width="80" Margin="2,2,0,2" Tag="table" Click="tableBtn_Click"/>
+                            <ToggleButton x:Name="listBtn" Content="List" Width="80" Margin="2,2,0,2" Tag="list" Click="listBtn_Click"/>                            
+                        </StackPanel>
+                    </Grid>
+                    <Grid Grid.Row="1" Background="#FFE2E2E2">
+                        <Grid x:Name="titleGrid" Margin="5,0,5,0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
+                    </Grid>
+                    <ScrollViewer x:Name="hostsScroll" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" VerticalScrollBarVisibility="Auto" Grid.Row="2" Background="#FFE2E2E2">
+                    </ScrollViewer>
+                </Grid>
             </GroupBox>
             <GroupBox x:Name="logBox" Header="Log" Grid.Column="1" Grid.Row="4" Grid.RowSpan="2" Margin="10, 10, 15,15">
-                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                    <TextBox x:Name="logTxt" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Visible" BorderBrush="Transparent" IsReadOnly="True" FontFamily="Consolas" FontSize="10.5" TextChanged="logTxt_TextChanged"/>
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,3,0,0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="25"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <Button x:Name="saveLogBtn" Width="25" Margin="3,0,0,0" ToolTip="Save log to file" Click="saveLogBtn_Click">
+                            <Image Source="/Ryd3rNetworkMonitor.ServerControlPanel;component/Resources/Images/Save.png"/>
+                        </Button>
+                        <Button x:Name="clearLogBtn" Width="25" Margin="3,0,0,0" ToolTip="Clear log without saving" Click="clearLogBtn_Click">
+                            <Image Source="/Ryd3rNetworkMonitor.ServerControlPanel;component/Resources/Images/Clear.png"/>
+                        </Button>
+                    </StackPanel>
+                    <TextBox x:Name="logTxt" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Margin="0,3,0,0" VerticalScrollBarVisibility="Visible" BorderBrush="Transparent" IsReadOnly="True" FontFamily="Consolas" FontSize="10.5" Grid.Row="1" TextChanged="logTxt_TextChanged"/>
                 </Grid>
             </GroupBox>
         </Grid>

@@ -13,7 +13,6 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
     public class Settings
     {
         public string Ip { get; private set; }
-        public int RegPort { get; private set; }
         public int MesPort { get; private set; }
         public int SendInterval { get; set; }
         public bool SendOnClick { get; set; }
@@ -22,7 +21,6 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
         public void GetSettings()
         {
             Ip = Properties.Settings.Default.ServerIp;
-            RegPort = Properties.Settings.Default.RegPort;
             MesPort = Properties.Settings.Default.MesPort;
             SendInterval = Properties.Settings.Default.SendInterval;
             SendOnClick = Properties.Settings.Default.SendOnClick;
@@ -33,18 +31,12 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
             }
         }
 
-        public void SaveSettings(string newIp, int newRegPort, int newMesPort, int newInterval, bool newSendOnClick, Host newHostInfo)
+        public void SaveSettings(string newIp, int newMesPort, int newInterval, bool newSendOnClick, Host newHostInfo)
         {
             if (newIp != Ip)
             {
                 Ip = newIp;
                 Properties.Settings.Default.ServerIp = newIp;
-            }
-
-            if (newRegPort != RegPort)
-            {
-                RegPort = newRegPort;
-                Properties.Settings.Default.RegPort = newRegPort;
             }
 
             if (newMesPort != MesPort)
@@ -96,7 +88,7 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
         {
             Settings settingsY = (Settings)obj;
 
-            if (this.Ip == settingsY.Ip && this.RegPort == settingsY.RegPort && this.MesPort == settingsY.MesPort 
+            if (this.Ip == settingsY.Ip && this.MesPort == settingsY.MesPort 
                 && this.SendInterval == settingsY.SendInterval && settingsY.Host.Equals(Host))
                 return true;
             else

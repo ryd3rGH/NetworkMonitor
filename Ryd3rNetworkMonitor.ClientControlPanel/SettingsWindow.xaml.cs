@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ryd3rNetworkMonitor.Library;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
@@ -32,7 +33,6 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
             if (settings != null)
             {
                 ipTxt.Text = settings.Ip;
-                regPortTxt.Text = settings.RegPort.ToString();
                 mesPortTxt.Text = settings.MesPort.ToString();
                 intervalTxt.Text = settings.SendInterval.ToString();
 
@@ -63,84 +63,103 @@ namespace Ryd3rNetworkMonitor.ClientControlPanel
 
         private void applyBtn_Click(object sender, RoutedEventArgs e)
         {
-            if ((nameTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(nameTxt.Text)) &&
-                loginTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(loginTxt.Text) &&
-                passTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(passTxt.Text) &&
-                printerTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(printerTxt.Text))
+            try
             {
-                if (settings.Host != null)
+                if ((nameTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(nameTxt.Text)) &&
+                        loginTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(loginTxt.Text) &&
+                        passTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(passTxt.Text) &&
+                        printerTxt.Text != string.Empty && !String.IsNullOrWhiteSpace(printerTxt.Text))
                 {
-                    //если данные хоста загружены из файла, то проверить данные и при необходимости обновить их в файле и в БД на сервере
-                    settings.SaveSettings(
-                            !String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
-                            !String.IsNullOrWhiteSpace(regPortTxt.Text) ? Convert.ToInt32(regPortTxt.Text) : 17179,
-                            !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178,
-                            !String.IsNullOrWhiteSpace(intervalTxt.Text) ? Convert.ToInt32(intervalTxt.Text) : 30,
-                            (bool)messageChBox.IsChecked ? true : false,
-                            new Library.Host(settings.Host.HostId, Settings.GetLocalIPAddress(),
-                                !String.IsNullOrWhiteSpace(nameTxt.Text) ? nameTxt.Text : string.Empty,
-                                !String.IsNullOrWhiteSpace(loginTxt.Text) ? loginTxt.Text : string.Empty,
-                                !String.IsNullOrWhiteSpace(passTxt.Text) ? passTxt.Text : string.Empty,
-                                !String.IsNullOrWhiteSpace(printerTxt.Text) ? printerTxt.Text : string.Empty,
-                                (bool)aUpsBtn.IsChecked ? true : false,
-                                (bool)aScanBtn.IsChecked ? true : false,
-                                DateTime.Now
-                            ));
-
-                    //доделать проверку и обновление данных в БД на сервере
-                }
-                else
-                {
-                    //если данных хоста нет (скорее всего нет файла host.xml), то нужно отправить данные на регистрацию серверу.
-                    //собрать объект Host
-                    
-                    settings.Host = new Library.Host(string.Empty, Settings.GetLocalIPAddress(),
-                                                    !String.IsNullOrWhiteSpace(nameTxt.Text) ? nameTxt.Text : string.Empty,
-                                                    !String.IsNullOrWhiteSpace(loginTxt.Text) ? loginTxt.Text : string.Empty,
-                                                    !String.IsNullOrWhiteSpace(passTxt.Text) ? passTxt.Text : string.Empty,
-                                                    !String.IsNullOrWhiteSpace(printerTxt.Text) ? printerTxt.Text : string.Empty,
-                                                    (bool)aUpsBtn.IsChecked ? true : false,
-                                                    (bool)aScanBtn.IsChecked ? true : false,
-                                                    DateTime.Now);
-
-                    
-                    //сохранить файл host.xml
-                    settings.Host.SaveHostFile(AppDomain.CurrentDomain.BaseDirectory);
-
-                    //отправить на регистрацию
-                    IFormatter formatter = new BinaryFormatter();
-                    TcpClient regClient = new TcpClient(settings.Ip, settings.RegPort);
-                    NetworkStream stream = regClient.GetStream(); 
-                    formatter.Serialize(stream, settings.Host); 
-
-                    if (stream.CanRead)
+                    if (settings.Host != null)
                     {
-                        byte[] buffer = new byte[1024];
-                        StringBuilder newHostId = new StringBuilder();
-                        int bytes = 0;
+                        //если данные хоста загружены из файла, то проверить данные и при необходимости обновить их в файле и в БД на сервере
+                        settings.SaveSettings(
+                                !String.IsNullOrWhiteSpace(ipTxt.Text) ? ipTxt.Text : "127.0.0.1",
+                                !String.IsNullOrWhiteSpace(mesPortTxt.Text) ? Convert.ToInt32(mesPortTxt.Text) : 17178,
+                                !String.IsNullOrWhiteSpace(intervalTxt.Text) ? Convert.ToInt32(intervalTxt.Text) : 30,
+                                (bool)messageChBox.IsChecked ? true : false,
+                                new Library.Host(settings.Host.HostId, Settings.GetLocalIPAddress(),
+                                    !String.IsNullOrWhiteSpace(nameTxt.Text) ? nameTxt.Text : string.Empty,
+                                    !String.IsNullOrWhiteSpace(loginTxt.Text) ? loginTxt.Text : string.Empty,
+                                    !String.IsNullOrWhiteSpace(passTxt.Text) ? passTxt.Text : string.Empty,
+                                    !String.IsNullOrWhiteSpace(printerTxt.Text) ? printerTxt.Text : string.Empty,
+                                    (bool)aUpsBtn.IsChecked ? true : false,
+                                    (bool)aScanBtn.IsChecked ? true : false,
+                                    DateTime.Now
+                                ));
+                    }
+                    else
+                    {
+                        //если данных хоста нет (скорее всего нет файла host.xml), то нужно отправить данные на регистрацию серверу.
+                        //собрать объект Host
 
-                        do
+                        settings.Host = new Library.Host(string.Empty, Settings.GetLocalIPAddress(),
+                                                        !String.IsNullOrWhiteSpace(nameTxt.Text) ? nameTxt.Text : string.Empty,
+                                                        !String.IsNullOrWhiteSpace(loginTxt.Text) ? loginTxt.Text : string.Empty,
+                                                        !String.IsNullOrWhiteSpace(passTxt.Text) ? passTxt.Text : string.Empty,
+                                                        !String.IsNullOrWhiteSpace(printerTxt.Text) ? printerTxt.Text : string.Empty,
+                                                        (bool)aUpsBtn.IsChecked ? true : false,
+                                                        (bool)aScanBtn.IsChecked ? true : false,
+                                                        DateTime.Now);                        
+
+                        IFormatter formatter = new BinaryFormatter();
+                        InnerMessage inMes = new InnerMessage(InnerMessageTypes.Registration, string.Empty, null, null, null);
+                        TcpClient regClient = new TcpClient(settings.Ip, settings.MesPort);
+                        NetworkStream stream = regClient.GetStream();
+                        formatter.Serialize(stream, new HostMessage(settings.Host, inMes));
+
+                        if (stream.CanRead)
                         {
-                            bytes = stream.Read(buffer, 0, buffer.Length);
-                            newHostId.AppendFormat("{0}", Encoding.ASCII.GetString(buffer, 0, bytes));
+                            byte[] buffer = new byte[1024];
+                            StringBuilder newHostId = new StringBuilder();
+                            int bytes = 0;
 
+                            do
+                            {
+                                bytes = stream.Read(buffer, 0, buffer.Length);
+                                newHostId.AppendFormat("{0}", Encoding.ASCII.GetString(buffer, 0, bytes));
+
+                            }
+                            while (stream.DataAvailable);
+
+                            settings.Host.SaveHostFile(AppDomain.CurrentDomain.BaseDirectory);
+                            settings.Host.HostId = newHostId.ToString();
+
+                            if (settings.Host.HostId != string.Empty && !String.IsNullOrWhiteSpace(settings.Host.HostId))
+                            {
+                                settings.Host.InsertHostIdToFile();
+                                MessageBox.Show("Host successfully registered", "Success");
+
+                                this.Close();
+                            }
+                            else
+                            {
+                                settings = null;
+                                MessageBox.Show("Registration failed", "Warning");
+                            }
                         }
-                        while (stream.DataAvailable);
-
-                        settings.Host.HostId = newHostId.ToString();
-                        if (settings.Host.HostId != string.Empty && !String.IsNullOrWhiteSpace(settings.Host.HostId))
-                        {
-                            MessageBox.Show("Host successfully registered", "Success");
-                        }                            
                         else
-                            MessageBox.Show("Registration failed", "Warning");
+                        {
+                            settings = null;
+                            MessageBox.Show("No response from server");
+                        }                            
                     }
                 }
+                else
+                    MessageBox.Show("Changes will not be saved due to the fact that\nnot all fields have been filled", "Warning");                
             }
-            else
-                MessageBox.Show("Changes will not be saved due to the fact that\nnot all fields have been filled", "Warning");
 
-            this.Close();
+            catch (SocketException)
+            {
+                settings = null;
+                MessageBox.Show("No response from server\nRegistration aborted");
+            }
+
+            catch (Exception)
+            {
+                settings = null;
+                MessageBox.Show("Error during registration\nRegistration aborted");
+            }
         }
 
         private void mesPortTxt_PreviewTextInput(object sender, TextCompositionEventArgs e)
